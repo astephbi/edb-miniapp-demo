@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { aller, actif, toast, mmss } from '../store.js'
+import { store, aller, actif, toast, mmss } from '../store.js'
 import { CONTENUS, TYPES } from '../data.js'
 
 const q = ref('')
@@ -12,7 +12,7 @@ const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 
 const resultats = computed(() => {
   const n = norm(q.value.trim())
-  return CONTENUS
+  return [...store.contenusReels, ...CONTENUS]
     .filter(c => type.value === 'tous' || c.type === type.value)
     .filter(c => societe.value === 'toutes' || c.societes.includes(societe.value))
     .map(c => {

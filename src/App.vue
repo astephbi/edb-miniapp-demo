@@ -55,7 +55,7 @@ function role (r) {
         <button :class="{ on: store.role === 'admin' }" @click="role('admin')">Brice</button>
       </div>
     </header>
-    <p class="demo-ribbon">Démo · données fictives · paiements simulés</p>
+    <p class="demo-ribbon">{{ store.reel ? 'Connecté au bot · paiements en mode test' : 'Démo · données fictives · paiements simulés' }}</p>
 
     <component :is="courant.c" :key="store.vue" />
 

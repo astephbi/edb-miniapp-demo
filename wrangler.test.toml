@@ -1,0 +1,37 @@
+# Cloudflare Worker : bot Telegram + API + Mini App (fichiers statiques de dist/)
+name = "edb-assistance"
+main = "server/worker.js"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*", "/telegram/*", "/setup"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "edb-assistance"
+database_id = "local-test"
+
+
+# Tous les jours à 8 h (heure d'Abidjan = UTC)
+[triggers]
+crons = ["0 8 * * *"]
+
+[vars]
+GROUP_ID = "-1003894736297"          # groupe EDB ASSISTANCE — TEST
+CONTENT_TOPICS = "8,9,10,11"         # Études, Suggestions, Témoignages, Partenaires
+GRACE_DAYS = "5"
+PAYMENT_MODE = "test"                # « test » : paiements simulés, aucun argent débité
+BOT_USERNAME = "edb_assistance_demo_bot"
+APP_URL = "https://app.test"
+TG_API = "http://127.0.0.1:8789"
+FAKE_TODAY = "2026-11-02"
+PROCHAIN_EVENEMENT = "dimanche à 17 h, étude en direct"
+
+# Secrets à créer dans le tableau de bord Cloudflare (jamais dans ce fichier) :
+#   BOT_TOKEN       le token donné par @BotFather
+#   WEBHOOK_SECRET  une longue phrase aléatoire
+#   SETUP_KEY       une autre phrase aléatoire, pour l'adresse /setup

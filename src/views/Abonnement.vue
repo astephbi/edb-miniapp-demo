@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { store, actif, fcfa, aller } from '../store.js'
+import { store, actif, fcfa, aller, payerReel, dateFr } from '../store.js'
 import { FORMULES, MOYENS } from '../data.js'
 import { haptic } from '../telegram.js'
 
@@ -19,9 +19,25 @@ function finDans (mois) {
   return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
-function payer () {
+const erreur = ref('')
+async function payer () {
   haptic('medium')
   etape.value = 'attente'
+  erreur.value = ''
+  if (store.reel) {
+    try {
+      const r = await payerReel(formule.value, m.value.nom)
+      recu.value = { numero: r.ref, date: dateFr(r.debut), montant: r.montant, formule: r.formuleNom, moyen: m.value.nom, fin: dateFr(r.fin), membre: moi.nom }
+      store.recus.unshift(recu.value)
+      etape.value = 'recu'
+      haptic('success')
+    } catch (e) {
+      erreur.value = e.message
+      etape.value = 'choix'
+      haptic('error')
+    }
+    return
+  }
   // En production : l'API crée la transaction chez l'agrégateur de paiement,
   // le membre valide sur son téléphone, puis l'agrégateur confirme à l'API (webhook).
   setTimeout(() => {
@@ -95,8 +111,9 @@ function payer () {
         <input id="tel" v-model="tel" inputmode="tel" />
       </div>
 
+      <div v-if="erreur" class="card small" style="color:var(--danger)">⚠️ {{ erreur }}</div>
       <button class="btn" @click="payer">Payer {{ fcfa(f.prix) }}</button>
-      <p class="muted small" style="text-align:center;margin:-4px 0 0">Paiement simulé pour la démo. En réel : validation sur votre téléphone, reçu instantané.</p>
+      <p class="muted small" style="text-align:center;margin:-4px 0 0">{{ store.reel ? 'Mode test : aucun argent n\'est débité. Le reçu et le lien du groupe arrivent dans le chat du bot.' : 'Paiement simulé pour la démo. En réel : validation sur votre téléphone, reçu instantané.' }}</p>
     </template>
 
     <!-- Attente -->

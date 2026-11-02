@@ -1,4 +1,7 @@
-# EDB Assistance — Mini App Telegram (démo)
+# EDB Assistance — Mini App Telegram + bot
+
+**Nouveau :** le vrai bot est dans `server/` (Cloudflare Worker + base D1). Guide de mise en ligne : [DEPLOIEMENT.md](DEPLOIEMENT.md).
+Ouverte dans Telegram depuis le Worker, l'app utilise les vraies données (abonnement, paiement en mode test, contenus du groupe). Ouverte ailleurs, elle reste en démo.
 
 Démo cliquable de l'application Telegram pour la communauté EDB Assistance.
 Toutes les données sont **fictives** et les paiements sont **simulés**.

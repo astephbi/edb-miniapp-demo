@@ -36,11 +36,11 @@ function ouvrir (c, seg = 0) { aller('lecteur', { lecture: { id: c.id, segment: 
       <div class="row">
         <div class="icon" style="background:color-mix(in srgb,var(--warn) 14%,transparent)">⏳</div>
         <div class="grow">
-          <div class="strong">Votre abonnement a expiré</div>
-          <div class="muted">{{ moi.fin }} · les replays sont verrouillés</div>
+          <div class="strong">{{ moi.statut === 'aucun' ? 'Pas encore abonné' : moi.statut === 'retard' ? 'Abonnement échu · délai de grâce' : 'Votre abonnement a expiré' }}</div>
+          <div class="muted">{{ moi.fin }}{{ moi.statut === 'retard' ? '' : ' · les replays sont verrouillés' }}</div>
         </div>
       </div>
-      <button class="btn" style="margin-top:12px" @click="aller('abonnement')">Renouveler en 1 minute</button>
+      <button class="btn" style="margin-top:12px" @click="aller('abonnement')">{{ moi.statut === 'aucun' ? 'M\'abonner en 1 minute' : 'Renouveler en 1 minute' }}</button>
     </div>
     <div v-else class="card row">
       <div class="icon" style="background:color-mix(in srgb,var(--ok) 13%,transparent)">✅</div>

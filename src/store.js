@@ -1,6 +1,6 @@
 import { reactive, computed } from 'vue'
 import { MEMBRES_DEMO } from './data.js'
-import { telegramUser } from './telegram.js'
+import { telegramUser, tg } from './telegram.js'
 
 const u = telegramUser()
 
@@ -32,8 +32,64 @@ export const store = reactive({
   ],
   reponses: [], // réponses reçues par « moi »
   toast: null,
-  recus: []
+  recus: [],
+  reel: false, // true quand l'app parle au vrai bot (API disponible et ouverte depuis Telegram)
+  contenusReels: []
 })
+
+// ---------------------------------------------------------------- API du bot
+// Ouverte dans Telegram et servie par le Worker : l'app utilise les vraies données.
+// Sinon (navigateur, GitHub Pages) : elle reste en mode démonstration.
+
+const MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
+export const dateFr = iso => { const [y, m, d] = iso.split('-').map(Number); return `${d} ${MOIS[m - 1]} ${y}` }
+
+export async function api (path, opts = {}) {
+  const r = await fetch(path, { ...opts, headers: { 'content-type': 'application/json', 'x-telegram-init-data': tg ? tg.initData : '', ...(opts.headers || {}) } })
+  const data = await r.json().catch(() => ({}))
+  if (!r.ok) throw new Error(data.erreur || 'Erreur ' + r.status)
+  return data
+}
+
+function appliquerStatut (me) {
+  const m = store.moi
+  m.nom = me.prenom || m.nom
+  m.formule = me.formule === 'annee' ? 'Année' : me.formule === 'trimestre' ? 'Trimestre' : '—'
+  if (me.statut === 'actif') { m.statut = 'actif'; m.fin = "Jusqu'au " + dateFr(me.fin) }
+  else if (me.statut === 'retard') { m.statut = 'retard'; m.fin = 'Expiré le ' + dateFr(me.fin) + ' · ' + me.grace + ' jours de grâce' }
+  else if (me.statut === 'expire') { m.statut = 'expire'; m.fin = 'Expiré le ' + dateFr(me.fin) }
+  else { m.statut = 'aucun'; m.fin = "Pas encore d'abonnement" }
+}
+
+const TYPE_APP = { audio: 'audio', video: 'etude', document: 'partenaire', texte: 'reco' }
+export async function chargerContenus () {
+  if (!store.reel) return
+  try {
+    const rows = await api('/api/contenus')
+    store.contenusReels = rows.map(r => ({
+      id: 'r' + r.id, type: TYPE_APP[r.type] || 'audio', titre: r.titre, societes: [], coach: 'EDB', date: r.created_at.slice(0, 10),
+      duree: r.duree ? Math.round(r.duree / 60) + ' min' : '—',
+      transcript: [{ t: 0, txt: r.extrait || r.titre }], reel: true
+    }))
+  } catch (e) { /* abonnement requis ou hors ligne */ }
+}
+
+export async function initReel () {
+  if (!tg) return
+  try {
+    const me = await api('/api/me')
+    store.reel = true
+    appliquerStatut(me)
+    await chargerContenus()
+  } catch (e) { /* API absente : on reste en démo */ }
+}
+
+export async function payerReel (formule, moyen) {
+  const r = await api('/api/pay', { method: 'POST', body: JSON.stringify({ formule, moyen }) })
+  appliquerStatut(await api('/api/me'))
+  await chargerContenus()
+  return r
+}
 
 export const actif = computed(() => store.moi.statut === 'actif')
 

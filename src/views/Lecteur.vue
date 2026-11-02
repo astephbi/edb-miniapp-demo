@@ -4,7 +4,7 @@ import { store, aller, mmss } from '../store.js'
 import { CONTENUS, TYPES } from '../data.js'
 import { haptic } from '../telegram.js'
 
-const c = computed(() => CONTENUS.find(x => x.id === store.lecture.id) || CONTENUS[0])
+const c = computed(() => [...store.contenusReels, ...CONTENUS].find(x => x.id === store.lecture.id) || CONTENUS[0])
 const segs = computed(() => c.value.transcript)
 const i = ref(Math.min(store.lecture.segment || 0, segs.value.length - 1))
 const lecture = ref(false)
