@@ -12,7 +12,7 @@ Pour bien démarrer, ouvrez l'application 👇 Elle vous montre en 5 minutes :
 • le salon qui correspond à votre objectif ;
 • la prochaine étude en direct : {prochain_evenement}.
 
-[ Ouvrir l'app ]   [ Bien démarrer ]
+[ Ouvrir l'app ]   [ Ce que j'ai manqué ]
 
 Une question personnelle ? Ne la postez pas dans les salons : réservez un créneau avec un analyste depuis l'application.
 
@@ -20,4 +20,4 @@ Une question personnelle ? Ne la postez pas dans les salons : réservez un crén
 
 Relance J+3 si le membre n'a pas ouvert le parcours :
 
-{prenom}, vous n'avez pas encore fait le parcours « Bien démarrer ». En 15 minutes, vous rattrapez l'essentiel de ce qui s'est dit avant votre arrivée. [ Commencer ]
+{prenom}, vous n'avez pas encore fait le parcours d'accueil. En 15 minutes, vous rattrapez l'essentiel de ce qui s'est dit avant votre arrivée. [ Commencer ]

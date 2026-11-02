@@ -3,7 +3,7 @@
 Vous arrivez dans une communauté de plusieurs milliers d'investisseurs. Pour ne pas vous noyer dans les messages, suivez ces 3 étapes, dans cet ordre.
 
 1️⃣ Ouvrez l'application (bouton « Ouvrir l'app » dans le bot) et vérifiez votre abonnement.
-2️⃣ Faites le parcours « Bien démarrer » : objectif, choix de la SGI, ouverture du compte, premier dépôt. 15 minutes.
+2️⃣ Faites le parcours d'accueil (page « Bienvenue ») : objectif, choix de la SGI, ouverture du compte, premier dépôt. 15 minutes.
 3️⃣ Écoutez les 2 dernières études dans la bibliothèque, avant de poser vos premières questions.
 
 🗂 À QUOI SERT CHAQUE SALON
@@ -17,7 +17,7 @@ Vous arrivez dans une communauté de plusieurs milliers d'investisseurs. Pour ne
 💎 Témoignages : parcours de membres (lecture seule)
 
 ⏪ CE QUE VOUS AVEZ MANQUÉ
-Inutile de remonter des milliers de messages. Dans l'application, l'onglet « Bien démarrer » résume le dernier mois : les études publiées, les avis en cours, les annonces importantes et les questions les plus posées, avec leurs réponses.
+Inutile de remonter des milliers de messages. Dans l'application, la page « Bienvenue » résume le dernier mois : les études publiées, les avis en cours, les annonces importantes et les questions les plus posées, avec leurs réponses.
 
 📌 LES RÈGLES
 • Pas de conseil personnalisé dans les salons. Votre situation personnelle se traite avec un analyste, sur rendez-vous dans l'application.
