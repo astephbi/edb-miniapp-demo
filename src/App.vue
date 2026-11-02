@@ -19,7 +19,7 @@ const VUES = {
   assistant: { c: Assistant, titre: 'Assistant EDB', tab: 'assistant' },
   rdv: { c: Rdv, titre: 'Réserver un analyste', tab: 'assistant' },
   abonnement: { c: Abonnement, titre: 'Mon abonnement', tab: 'compte' },
-  parcours: { c: Parcours, titre: 'Bien démarrer', tab: 'accueil' },
+  parcours: { c: Parcours, titre: 'Bienvenue', tab: 'accueil' },
   admin: { c: Admin, titre: 'Espace Brice', tab: null },
   coach: { c: Coach, titre: 'Espace coach', tab: null }
 }

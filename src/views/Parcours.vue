@@ -1,13 +1,39 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { store, aller, toast } from '../store.js'
-import { NIVEAUX, SGI_COMPARATIF } from '../data.js'
+import { NIVEAUX, SGI_COMPARATIF, CONTENUS, TYPES, FAQ } from '../data.js'
 import { haptic } from '../telegram.js'
 
 const moi = store.moi
 const ouvert = ref(moi.parcours.findIndex(x => !x))
 const faites = computed(() => moi.parcours.filter(Boolean).length)
 const pieces = ref([true, true, false, false])
+const vue = ref('rattrapage') // rattrapage | salons | parcours
+const depuis = '2026-10-03'
+const manque = CONTENUS.filter(c => c.date >= depuis && (c.type === 'etude' || c.type === 'audio')).sort((a, b) => b.date.localeCompare(a.date))
+const ANNONCES = [
+  { date: '31 oct.', txt: 'Relance des abonnements de fin de mois : vérifiez votre statut dans l\'app.' },
+  { date: '18 oct.', txt: 'Nouveau calendrier des études du dimanche (17h et 18h).' },
+  { date: '4 oct.', txt: 'Réorganisation du coaching individuel : réservation par l\'app.' }
+]
+const QUESTIONS = [
+  { q: 'Quand le dividende est-il payé ?', faq: FAQ[0] },
+  { q: 'Comment calculer mon CMP ?', faq: FAQ[1] },
+  { q: "Pourquoi mon ordre n'est pas passé ?", faq: FAQ[2] }
+]
+const qOuverte = ref(-1)
+const SALONS = [
+  ['🏠', 'La Cour familiale', 'Annonces, études en direct du dimanche, vie de la communauté'],
+  ['👶', 'Benjamins · Cadets · Seniors', 'Échanges selon votre objectif : 1, 6 ou 12 millions par an'],
+  ['📈', 'Traders et Rentiers', 'Échanges selon votre stratégie'],
+  ['💰', 'Finances saines', 'Budget, épargne, gestion personnelle'],
+  ['📚', 'Études de l\'EDB', 'Replays des études · lecture seule'],
+  ['⚡', 'Suggestions', 'Avis datés des coachs · lecture seule'],
+  ['📄', 'Partenaires', 'Notes des SGI partenaires · lecture seule'],
+  ['💎', 'Témoignages', 'Parcours de membres · lecture seule']
+]
+const REGLES = ['Pas de conseil personnalisé dans les salons : réservez un analyste.', 'Cherchez avant de demander : la recherche fouille aussi les audios.', 'Pas de publicité ni de sollicitation privée des membres.', 'Les performances passées ne garantissent pas les performances futures.']
+function ecouter (c) { aller('lecteur', { lecture: { id: c.id, segment: 0 } }) }
 
 const ETAPES = [
   { titre: 'Mon objectif', sous: 'Choisir mon niveau de départ' },
@@ -27,6 +53,52 @@ function valider (k) {
 
 <template>
   <div class="page">
+    <div class="chips">
+      <button class="chip" :class="{ on: vue === 'rattrapage' }" @click="vue = 'rattrapage'">⏪ Ce que vous avez manqué</button>
+      <button class="chip" :class="{ on: vue === 'salons' }" @click="vue = 'salons'">🗂 Salons et règles</button>
+      <button class="chip" :class="{ on: vue === 'parcours' }" @click="vue = 'parcours'">🧭 Parcours {{ faites }}/5</button>
+    </div>
+
+    <!-- RATTRAPAGE -->
+    <template v-if="vue === 'rattrapage'">
+      <div class="card">
+        <div class="strong" style="font-size:16px">Le mois dernier en 5 minutes</div>
+        <div class="muted small">Du 3 octobre à aujourd'hui · inutile de remonter les milliers de messages du groupe</div>
+      </div>
+      <div class="section-title">À écouter en priorité · {{ manque.length }}</div>
+      <div class="card flat">
+        <button v-for="c in manque" :key="c.id" class="list-item" @click="ecouter(c)">
+          <span class="icon">{{ TYPES[c.type].icone }}</span>
+          <span class="grow"><b>{{ c.titre }}</b><br><span class="muted small">{{ new Date(c.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) }} · {{ c.duree }}</span></span>
+          <span class="chev">›</span>
+        </button>
+      </div>
+      <div class="section-title">Annonces importantes</div>
+      <div class="card flat">
+        <div v-for="(a, k) in ANNONCES" :key="k" class="list-item"><span class="pill grey" style="flex:none">{{ a.date }}</span><span class="small">{{ a.txt }}</span></div>
+      </div>
+      <div class="section-title">Les questions les plus posées</div>
+      <div class="card flat">
+        <div v-for="(x, k) in QUESTIONS" :key="k" style="border-top:1px solid var(--line)">
+          <button class="list-item" style="border:0" @click="qOuverte = qOuverte === k ? -1 : k"><span class="grow strong small">{{ x.q }}</span><span class="chev">{{ qOuverte === k ? '⌄' : '›' }}</span></button>
+          <div v-if="qOuverte === k" class="small" style="padding:0 14px 12px">{{ x.faq.rep }}</div>
+        </div>
+      </div>
+      <button class="btn" @click="vue = 'parcours'">Continuer : mon parcours</button>
+    </template>
+
+    <!-- SALONS ET RÈGLES -->
+    <template v-if="vue === 'salons'">
+      <div class="card flat">
+        <div v-for="(s, k) in SALONS" :key="k" class="list-item"><span class="icon">{{ s[0] }}</span><span class="grow"><b>{{ s[1] }}</b><br><span class="muted small">{{ s[2] }}</span></span></div>
+      </div>
+      <div class="section-title">Les règles</div>
+      <div class="card" style="display:flex;flex-direction:column;gap:8px">
+        <div v-for="(r, k) in REGLES" :key="k" class="small">📌 {{ r }}</div>
+      </div>
+    </template>
+
+    <template v-if="vue === 'parcours'">
     <div class="card">
       <div class="row"><div class="grow strong">Votre progression</div><span class="pill">{{ faites }}/5</span></div>
       <div class="progress" style="margin-top:10px"><div :style="{ width: faites * 20 + '%' }"></div></div>
@@ -83,5 +155,6 @@ function valider (k) {
         <button v-if="!moi.parcours[k]" class="btn" @click="valider(k)">C'est fait</button>
       </div>
     </div>
+    </template>
   </div>
 </template>

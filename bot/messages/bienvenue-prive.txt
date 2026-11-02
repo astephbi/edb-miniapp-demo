@@ -1,0 +1,23 @@
+Message privé envoyé automatiquement par le bot à chaque nouveau membre, dès que sa demande d'adhésion est acceptée.
+Les éléments entre {accolades} sont remplis automatiquement.
+
+---
+
+Bonjour {prenom} 👋 Bienvenue dans EDB Assistance.
+
+Votre abonnement {formule} est actif jusqu'au {date_fin}.
+
+Pour bien démarrer, ouvrez l'application 👇 Elle vous montre en 5 minutes :
+• ce que vous avez manqué ce mois-ci ({nb_etudes} études, {nb_avis} avis datés) ;
+• le salon qui correspond à votre objectif ;
+• la prochaine étude en direct : {prochain_evenement}.
+
+[ Ouvrir l'app ]   [ Bien démarrer ]
+
+Une question personnelle ? Ne la postez pas dans les salons : réservez un créneau avec un analyste depuis l'application.
+
+---
+
+Relance J+3 si le membre n'a pas ouvert le parcours :
+
+{prenom}, vous n'avez pas encore fait le parcours « Bien démarrer ». En 15 minutes, vous rattrapez l'essentiel de ce qui s'est dit avant votre arrivée. [ Commencer ]

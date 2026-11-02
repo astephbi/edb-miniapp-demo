@@ -79,8 +79,8 @@ function ouvrir (c, seg = 0) { aller('lecteur', { lecture: { id: c.id, segment: 
     <button v-if="etapes < 5" class="card row" style="text-align:left" @click="aller('parcours')">
       <div class="icon">🧭</div>
       <div class="grow">
-        <div class="strong">Bien démarrer à la BRVM</div>
-        <div class="muted">{{ etapes }}/5 étapes · SGI, compte, premier achat</div>
+        <div class="strong">Nouveau ? Rattrapez le mois en 5 minutes</div>
+        <div class="muted">Ce que vous avez manqué · salons et règles · parcours {{ etapes }}/5</div>
         <div class="progress" style="margin-top:8px"><div :style="{ width: etapes * 20 + '%' }"></div></div>
       </div>
       <span class="chev">›</span>
